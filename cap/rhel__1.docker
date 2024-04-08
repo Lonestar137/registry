@@ -1,0 +1,12 @@
+FROM oraclelinux:8
+
+RUN useradd -m prime
+RUN dnf update
+RUN dnf install -y gcc
+
+# Run the script as the non-root user
+ADD ./volumes/cap/ /tmp/cap/
+RUN chown prime:prime -R /tmp/cap
+
+USER prime
+WORKDIR /tmp/cap

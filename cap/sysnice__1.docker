@@ -1,0 +1,6 @@
+FROM localhost/cap/base:1
+
+# # Copy the Python script into the container
+# COPY ./sysnice_test.py /app/sysnice_test.py
+# # Command to run the script
+# CMD ["python", "sysnice_test.py"]

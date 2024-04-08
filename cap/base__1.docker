@@ -1,0 +1,14 @@
+FROM python:3.10-slim
+
+# Create a non-root user
+RUN useradd -m prime
+
+RUN apt update
+RUN apt install -y gcc
+
+# Run the script as the non-root user
+ADD ./volumes/cap/ /tmp/cap/
+RUN chown prime:prime -R /tmp/cap
+
+USER prime
+WORKDIR /tmp/cap

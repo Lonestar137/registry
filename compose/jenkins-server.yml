@@ -1,0 +1,16 @@
+version: '3'
+services:
+  jenkins:
+    image: jenkins/jenkins:lts-jdk17
+    ports:
+      - 8080:8080
+      - 50000:50000
+    restart: on-failure
+    user: 1000
+    volumes:
+      # - ./.cache/jenkins:/var/jenkins_home:z
+      - jenkins_home:/var/jenkins_home:z
+
+# Store data in a named volume.
+volumes:
+  jenkins_home:

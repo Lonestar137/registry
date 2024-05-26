@@ -1,0 +1,10 @@
+FROM docker.io/oraclelinux:8
+
+WORKDIR /tmp
+RUN curl -L https://bootstrap.saltproject.io | sh -s -- -X -M
+
+# Entrypoint salt-minion
+# Entrypoint salt-master
+
+
+

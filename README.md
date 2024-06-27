@@ -6,7 +6,7 @@ including dev environments, testing, cloud containers, etc . . .
 
 ## How-to-use
 
-It's actually really simple to build.  It's designed to work with [rustery](git@github.com:Lonestar137/rustery.git)
+It's actually really simple to build.  It's designed to work with [rustery](https://github.com/Lonestar137/rustery.git)
 
 To build the containers simply run this command from the root of the repo:
 ```bash

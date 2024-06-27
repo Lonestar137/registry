@@ -1,0 +1,22 @@
+FROM docker.io/python:latest
+
+WORKDIR /app
+
+ADD ./volumes/aws/loader.py /app/loader.py
+
+RUN pip3.12 install boto3
+
+# Set these variables at runtime.
+## Bucket that data is downloaded from
+ENV INPUT_BUCKET="default"
+## Object path in input bucket to retrieve.
+ENV DATA_FILES="default"
+
+## Bucket that data is saved to.
+ENV OUTPUT_BUCKET="default"
+## Object path to save to.
+ENV ARCHIVE_PATH="archive"
+
+
+CMD ["python3.12", "./loader.py"]
+

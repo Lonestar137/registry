@@ -1,0 +1,6 @@
+FROM docker.io/oraclelinux:8
+
+RUN yum update && yum install -y git clang curl bash vim
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
+   . "$HOME/.cargo/env"  && \
+   rustup default stable

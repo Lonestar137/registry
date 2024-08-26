@@ -1,0 +1,19 @@
+
+# Use an official Python runtime as the base image
+FROM python:3.9-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Install the required packages
+RUN pip install --no-cache-dir uvicorn fastapi
+
+# Copy the FastAPI application code into the container
+COPY volumes/aws/app.py .
+
+# Expose the port that FastAPI will run on
+EXPOSE 8000
+
+# Command to run the FastAPI application
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+

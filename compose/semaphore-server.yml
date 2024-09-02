@@ -1,0 +1,12 @@
+version: '3'
+services:
+  semaphore:
+    ports:
+      - 3000:3000
+    image: docker.io/semaphoreui/semaphore:latest
+    environment:
+      SEMAPHORE_DB_DIALECT: bolt
+      SEMAPHORE_ADMIN: admin
+      SEMAPHORE_ADMIN_NAME: admin
+      SEMAPHORE_ADMIN_PASSWORD: changeme
+      SEMAPHORE_ADMIN_EMAIL: admin@localhost

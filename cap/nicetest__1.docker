@@ -1,0 +1,13 @@
+FROM ubuntu:20.04
+
+RUN apt-get update && apt-get install -y build-essential
+
+WORKDIR /app
+
+COPY ./volumes/cap/nice_test.c .
+
+RUN gcc -o nice_test nice_test.c
+
+CMD ["./nice_test"]
+
+

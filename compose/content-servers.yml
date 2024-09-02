@@ -1,0 +1,17 @@
+version: '3'
+services:
+  readarr:
+    image: docker.io/linuxserver/readarr:0.4.0-nightly
+    container_name: readarr-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+    volumes:
+      - /mnt/sda1/data/readarr/config:/config:z
+      - /mnt/sda1/data/readarr/books:/books:z #optional
+      - /mnt/sda1/data/readarr/downloadclient-downloads:/downloads:z #optional
+    ports:
+      - 8787:8787
+    restart: unless-stopped
+  

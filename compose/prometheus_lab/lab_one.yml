@@ -1,0 +1,16 @@
+version: '3'
+services:
+
+  # Setup prometheus here.
+  prometheus:
+    image: docker.io/oraclelinux:8
+    container_name: prommon
+    command: tail -f /dev/null
+
+  # Contains the endpoints to be monitored.
+  fastapi_data:
+    image: docker.io/python:3.12
+    container_name: apidata
+    command: tail -f /dev/null
+    volumes:
+      - ./api.py:/tmp/api.py

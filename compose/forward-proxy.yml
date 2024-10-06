@@ -1,0 +1,18 @@
+version: '3'
+services:
+  nginx-forward-proxy:
+    image: docker.io/dominikbechstein/nginx-forward-proxy:latest
+    container_name: nginx-forward-proxy
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../volumes/fwd-proxy/nginx.conf:/usr/local/nginx/conf/nginx.conf:z
+      - cache:/var/cache/nginx:z
+    restart: unless-stopped
+    command: ['nginx', '-g', 'daemon off;']
+volumes:
+  cache:
+
+# To use this on Linux set these environment variables
+# export http_proxy=http://localhost:8080
+# export https_proxy=$http_proxy

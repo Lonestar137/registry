@@ -1,7 +1,11 @@
 FROM docker.io/oraclelinux:8
 
 WORKDIR /tmp
-RUN curl -L https://bootstrap.saltproject.io | sh -s -- -X -M
+
+# Install master, minion, and syndic component
+RUN curl -L https://bootstrap.saltproject.io | sh -s -- -X -M -S
+
+EXPOSE 4505 4506
 
 # Entrypoint salt-minion
 # Entrypoint salt-master

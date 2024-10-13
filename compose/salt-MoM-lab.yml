@@ -1,0 +1,72 @@
+version: '3'
+services:
+  # Primary Master (Master of Masters)
+  salt-master:
+    image: localhost/salt/base:3
+    container_name: salt-master
+    hostname: salt-master
+    volumes:
+      - salt-master-data:/etc/salt/master.d
+      - ../volumes/srv/salt:/srv/salt/
+    ports:
+      - "4505:4505"
+      - "4506:4506"
+    environment:
+      - MASTER=salt-master
+    command: ( salt-minion & ) && salt-master --log-file-level=debug
+    networks:
+      - salt-network
+
+  # Secondary Master (Syndic)
+  salt-syndic:
+    image: localhost/salt/base:3
+    container_name: salt-syndic
+    hostname: salt-syndic
+    volumes:
+      - salt-syndic-data:/etc/salt/syndic.d
+    environment:
+      - MASTER=salt-master
+      - SYNDIC=salt-master
+    command: |
+      /bin/bash -c "
+      echo 'syndic_master: salt-master' > /etc/salt/master.d/syndic.conf;
+      echo 'order_masters: True' >> /etc/salt/master.d/syndic.conf;
+      salt-master --log-file-level=debug & salt-syndic --log-file-level=debug
+      "
+      # salt-master --log-file-level=debug & salt-syndic --log-file-level=debug
+    depends_on:
+      - salt-master
+    networks:
+      salt-network:
+      salt-internal-network:
+        aliases:
+          - salt
+
+  # Minion connecting to the secondary master
+  salt-minion:
+    image: localhost/salt/base:3
+    container_name: salt-minion
+    hostname: salt-minion
+    command: |
+      /bin/bash -c "
+        echo "id: my-minion-xyz" >> /etc/salt/minion ;
+        salt-minion
+        "
+    volumes:
+      - salt-minion-data:/etc/salt/minion.d
+    # environment:
+    #   - MASTER=salt-syndic
+    depends_on:
+      - salt-syndic
+    networks:
+      - salt-internal-network
+
+volumes:
+  salt-master-data:
+  salt-syndic-data:
+  salt-minion-data:
+
+networks:
+  salt-network:
+  salt-internal-network:
+

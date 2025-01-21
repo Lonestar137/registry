@@ -1,17 +1,60 @@
-version: '3'
+# version: '3'
 services:
-  readarr:
-    image: docker.io/linuxserver/readarr:0.4.0-nightly
-    container_name: readarr-server
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Chicago
-    volumes:
-      - /mnt/sda1/data/readarr/config:/config:z
-      - /mnt/sda1/data/readarr/books:/books:z #optional
-      - /mnt/sda1/data/readarr/downloadclient-downloads:/downloads:z #optional
-    ports:
-      - 8787:8787
-    restart: unless-stopped
+  # readarr:
+  #   image: docker.io/linuxserver/readarr:0.4.0-nightly
+  #   container_name: readarr-server
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=America/Chicago
+  #   volumes:
+  #     - /mnt/sda1/data/readarr/config:/config:z
+  #     - /mnt/sda1/data/readarr/books:/books:z #optional
+  #     - /mnt/sda1/data/readarr/downloadclient-downloads:/downloads:z #optional
+  #   ports:
+  #     - 8787:8787
+  #   restart: unless-stopped
   
+  # sonarr:
+  #   image: docker.io/linuxserver/sonarr:latest
+  #   container_name: sonarr
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=Etc/UTC
+  #   volumes:
+  #     - /mnt/sda1/data/sonarr/config:/config:z
+  #     - /mnt/sda1/data/sonarr/tvseries:/tvseries:z #optional
+  #     - /mnt/sda1/data/sonarr/downloadclient-downloads:/downloads:z #optional
+  #   ports:
+  #     - 8989:8989
+  #   restart: unless-stopped
+
+  jellyfin:
+    image: docker.io/jellyfin/jellyfin
+    container_name: jellyfin
+    user: 1000:1000
+    network_mode: 'host'
+    volumes:
+    - /mnt/sda1/data/jellyfin/config:/config:z
+    - /mnt/sda1/data/jellyfin/cache:/cache:z
+    - type: bind
+      source: /mnt/sda1/data/media
+      target: /media
+      read_only: true
+      # Optional - extra fonts to be used during transcoding with subtitle burn-in
+      # - type: bind
+      #   source: /path/to/fonts
+      #   target: /usr/local/share/fonts/custom
+      #   read_only: true
+    restart: 'unless-stopped'
+    # Optional - alternative address used for autodiscovery
+    # environment:
+    #   - JELLYFIN_PublishedServerUrl=http://example.com
+    # Optional - may be necessary for docker healthcheck to pass if running in host network mode
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+
+
+

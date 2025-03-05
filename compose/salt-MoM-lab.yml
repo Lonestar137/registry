@@ -6,14 +6,14 @@ services:
     container_name: salt-master
     hostname: salt-master
     volumes:
-      - salt-master-data:/etc/salt/master.d
-      - ../volumes/srv/salt:/srv/salt/
+      - salt-master-data:$SALT_DIR/etc/salt/master.d
+      # - ../volumes/srv/salt:/srv/salt/
     ports:
       - "4505:4505"
       - "4506:4506"
     environment:
       - MASTER=salt-master
-    command: ( salt-minion & ) && salt-master --log-file-level=debug
+    command: /bin/bash -c "( salt-minion & ) && salt-master --log-file-level=debug"
     networks:
       - salt-network
 
@@ -23,15 +23,15 @@ services:
     container_name: salt-syndic
     hostname: salt-syndic
     volumes:
-      - salt-syndic-data:/etc/salt/syndic.d
+      - salt-syndic-data:$SALT_DIR/syndic.d
     environment:
       - MASTER=salt-master
       - SYNDIC=salt-master
     command: |
       /bin/bash -c "
-      echo 'syndic_master: salt-master' > /etc/salt/master.d/syndic.conf;
-      echo 'order_masters: True' >> /etc/salt/master.d/syndic.conf;
-      salt-master --log-file-level=debug & salt-syndic --log-file-level=debug
+      echo 'syndic_master: salt-master' > /etc/salt/master.d/syndic.conf ;
+      echo 'order_masters: True' >>       /etc/salt/master.d/syndic.conf ;
+      salt-master --log-file-level=debug & ; salt-syndic --log-file-level=debug
       "
       # salt-master --log-file-level=debug & salt-syndic --log-file-level=debug
     depends_on:
@@ -49,11 +49,11 @@ services:
     hostname: salt-minion
     command: |
       /bin/bash -c "
-        echo "id: my-minion-xyz" >> /etc/salt/minion ;
+        echo 'id: my-minion-xyz' >> /etc/salt/minion ;
         salt-minion
         "
     volumes:
-      - salt-minion-data:/etc/salt/minion.d
+      - salt-minion-data:$SALT_DIR/etc/salt/minion.d
     # environment:
     #   - MASTER=salt-syndic
     depends_on:

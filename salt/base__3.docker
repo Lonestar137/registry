@@ -1,9 +1,28 @@
 FROM docker.io/oraclelinux:8
 
-WORKDIR /tmp
+WORKDIR /root
+
+ARG SALT_DIR=/root/salt
+
+ENV SALT_DIR=${SALT_DIR}
+ENV PATH=${SALT_DIR}:$PATH
+ENV SALT_SALTFILE=${SALT_DIR}/Saltfile
+
+# WORKDIR $SALT_DIR
+
+RUN dnf update && dnf install -y xz
 
 # Install master, minion, and syndic component
-RUN curl -L https://bootstrap.saltproject.io | sh -s -- -X -M -S
+RUN curl -o quick.sh -L https://raw.githubusercontent.com/saltstack/salt-bootstrap/develop/salt-quick-start.sh && \
+    chmod +x ./quick.sh && ./quick.sh -f && \
+    curl -L -o ./salt.tar.xz \
+    https://packages.broadcom.com/artifactory/saltproject-generic/onedir/3007.1/salt-3007.1-onedir-linux-x86_64.tar.xz && \
+    tar xf ./salt.tar.xz && \
+    mv -v $SALT_DIR/etc/* /etc/salt/
+
+RUN mkdir -p /etc/salt/master.d && \
+    mkdir -p /etc/salt/syncdic.d &&\
+    mkdir -p /etc/salt/minion.d
 
 EXPOSE 4505 4506
 

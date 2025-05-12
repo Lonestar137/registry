@@ -1,0 +1,23 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /host_logs/*.log
+    - /host_logs/syslog
+    - /host_logs/messages
+  fields:
+    log_source: system
+  fields_under_root: true
+
+output.logstash:
+  hosts: ["logstash:5044"]
+
+# Optional: Enable logging for debugging
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /usr/share/filebeat/logs
+  name: filebeat
+  keepfiles: 7
+  permissions: 0644
+
